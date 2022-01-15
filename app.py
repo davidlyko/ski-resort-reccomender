@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -14,6 +14,21 @@ Mtns = {"Mountain Creek": ["https://www.mountaincreek.com/mountainreport",  0, 0
 @app.route('/home')
 def home_page():
     return render_template('home.html')
+
+@app.route('/about')
+def about_page():
+    return render_template('about_page.html')
+
+@app.route('/', methods=['POST'])
+def output_page():
+    city = request.form['city']
+    state = request.form['state']
+    miles = request.form['miles']
+    print(city)
+    return render_template('output.html', first_name='Mountain Creek', first_distance='50', first_score='10', second_name='Killington', second_distance='100', second_score='9.5', third_name='Whiteface', third_distance='120', third_score='8.0', fourth_name='Okemo', fourth_distance='200', fourth_score='7.5', fifth_name='Stowe', fifth_distance='350', fifth_score='5.5')
+
+
+
 
 #Creating the Recommender scale
 
@@ -41,26 +56,27 @@ Mtns["Hunter Mountain"][2] = "".join(numeric_filter)
 '''
 
 # Web scraping for trails -- Killington Specific -- tested == bad
-DRIVER_PATH = '/path/to/chromedriver'
-driver = webdriver.Chrome(executable_path=DRIVER_PATH)
-driver.get('https://google.com')
+#DRIVER_PATH = '/path/to/chromedriver'
+#driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+#driver.get('https://google.com')
 
-driver.get(Mtns["Killington"][0])
-print(driver.page_source)
+#driver.get(Mtns["Killington"][0])
+#print(driver.page_source)
 
-soup = BeautifulSoup(content, "html.parser")
-print(soup.prettify)
-tmp = soup.find("text", {"class": "ng-progress"})
-print(tmp)
-Mtns["Killington"][1] = tmp[0].text
-total_trails = tmp[1].text
-numeric_filter = filter(str.isdigit, total_trails)
-Mtns["Killington"][2] = "".join(numeric_filter)
+#soup = BeautifulSoup(content, "html.parser")
+#print(soup.prettify)
+#tmp = soup.find("text", {"class": "ng-progress"})
+#print(tmp)
+#Mtns["Killington"][1] = tmp[0].text
+#total_trails = tmp[1].text
+#numeric_filter = filter(str.isdigit, total_trails)
+#Mtns["Killington"][2] = "".join(numeric_filter)
 
 
-print(Mtns)
+#print(Mtns)
 
 
 
 
 #app.run(host='0.0.0.0', port=81)
+
