@@ -26,17 +26,19 @@ op = webdriver.ChromeOptions()
 driver = webdriver.Chrome(service=ser, options=op)
 #get method to launch the URL
 driver.get("https://www.onthesnow.com/")
-time.sleep(5)
+time.sleep(3)
 search_btn = driver.find_element(By.CLASS_NAME, "styles_btnSearch__1DkDs")
 search_btn.click()
 header = driver.find_element(By.CLASS_NAME, "styles_search__35w0k")
 search_bar = header.find_element(By.TAG_NAME, "input")
-print(search_bar)
 search_bar.clear()
 search_bar.send_keys("Mountain Creek")
 search_bar.send_keys(Keys.RETURN)
+time.sleep(8)
+header = driver.find_element(By.CLASS_NAME, "styles_link__Ibp28")
+URL = header.get_attribute("href")
 
-
+driver.get(URL)
 
 #inputElement.send_keys('1234')
 #inputElement.send_keys(Keys.RETURN)
