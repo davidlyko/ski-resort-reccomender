@@ -1,3 +1,4 @@
+from cgitb import text
 from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
@@ -20,10 +21,11 @@ def home_page():
     return render_template('home.html')
 
 DRIVER_PATH = "C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
-
 ser = Service(DRIVER_PATH)
 op = webdriver.ChromeOptions()
 driver = webdriver.Chrome(service=ser, options=op)
+mountain = "Hunter Mountain"
+
 #get method to launch the URL
 driver.get("https://www.onthesnow.com/")
 time.sleep(3)
@@ -32,13 +34,22 @@ search_btn.click()
 header = driver.find_element(By.CLASS_NAME, "styles_search__35w0k")
 search_bar = header.find_element(By.TAG_NAME, "input")
 search_bar.clear()
-search_bar.send_keys("Mountain Creek")
+search_bar.send_keys(mountain)
 search_bar.send_keys(Keys.RETURN)
 time.sleep(8)
 header = driver.find_element(By.CLASS_NAME, "styles_link__Ibp28")
-URL = header.get_attribute("href")
+URL = header.get_attribute("href") #first search result link
 
-driver.get(URL)
+driver.get(URL) 
+time.sleep(3)
+
+mountain_info = driver.find_elements(By.CLASS_NAME, "styles_value__ocDGV")
+for mtn in mountain_info: #prints in order: base depth, lifts, trails ---- Different stuff/amounts depending on mtn
+    print(mtn.text)
+
+
+
+
 
 #inputElement.send_keys('1234')
 #inputElement.send_keys(Keys.RETURN)
