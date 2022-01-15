@@ -2,7 +2,11 @@ from flask import Flask, render_template
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 import pandas as pd
+import time
 
 app = Flask(__name__)
 Mtns = {"Mountain Creek": ["https://www.mountaincreek.com/mountainreport",  0, 0], 
@@ -14,6 +18,25 @@ Mtns = {"Mountain Creek": ["https://www.mountaincreek.com/mountainreport",  0, 0
 @app.route('/home')
 def home_page():
     return render_template('home.html')
+
+DRIVER_PATH = "C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
+
+ser = Service(DRIVER_PATH)
+op = webdriver.ChromeOptions()
+driver = webdriver.Chrome(service=ser, options=op)
+#get method to launch the URL
+driver.get("https://www.onthesnow.com/")
+time.sleep(5)
+inputElements = driver.find_elements(By.CLASS_NAME, "styles_search__hLy4C")
+inputElements[0].send_keys("Mountain Creek")
+
+print(inputElements)
+#inputElement.send_keys('1234')
+#inputElement.send_keys(Keys.RETURN)
+
+#driver.quit()
+
+
 
 #Creating the Recommender scale
 
@@ -39,26 +62,7 @@ total_trails = soup.findAll("span", {"class": "c118__number2--v1"})[2].text
 numeric_filter = filter(str.isdigit, total_trails)
 Mtns["Hunter Mountain"][2] = "".join(numeric_filter)
 '''
-
-# Web scraping for trails -- Killington Specific -- tested == bad
-DRIVER_PATH = '/path/to/chromedriver'
-driver = webdriver.Chrome(executable_path=DRIVER_PATH)
-driver.get('https://google.com')
-
-driver.get(Mtns["Killington"][0])
-print(driver.page_source)
-
-soup = BeautifulSoup(content, "html.parser")
-print(soup.prettify)
-tmp = soup.find("text", {"class": "ng-progress"})
-print(tmp)
-Mtns["Killington"][1] = tmp[0].text
-total_trails = tmp[1].text
-numeric_filter = filter(str.isdigit, total_trails)
-Mtns["Killington"][2] = "".join(numeric_filter)
-
-
-print(Mtns)
+#print(Mtns)
 
 
 
