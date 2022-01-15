@@ -83,19 +83,19 @@
     </style>
 
 
-<body>
+
     <nav class="navbar navbar-light" style="background-color: white;">
-        <a class="navbar-brand" href="#">Ski Resort Recommender</a>
+        <a class="navbar-brand" href="{{url_for('home_page')}}">Ski Resort Recommender</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{url_for('home_page')}}">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="{{url_for('about_page')}}">About</a>
                 </li>
             </ul>
         </div>
@@ -106,21 +106,21 @@
 <img src="../static/winter.jpg" />
 
 <div id="form-box">
-  <form>
+<form name="getLocation" action="." method="post">
     <div id="input-group">
         <label for="location" class="glyphicon glyphicon-search"></label><!--
-         --><input type="text" placeholder="Input Your City" id="city">
+        --><input type="text" placeholder="Input Your City" id="city" name="city">
     
         <br/>
 
         <label for="location" class="glyphicon glyphicon-search"></label><!--
-        --><input type="text" placeholder="Input Your State" id="state">
+        --><input type="text" placeholder="Input Your State" id="state" name="state">
         <br/>
 
         <label for="location" class="glyphicon glyphicon-search"></label><!--
-        --><input type="number" placeholder="Input Maximum Distance You Would Like to Travel (miles)" id="miles">
+        --><input type="number" placeholder="Input Maximum Distance You Would Like to Travel (miles)" id="miles" name="miles">
         </div>
-         <br/>
+        <br/>
     <button id="search" onclick="insertLocation()">Search</button>
 
 
@@ -136,7 +136,7 @@
     </script>
 
 
-  </form>
+</form>
 </div>
 
 <br/>

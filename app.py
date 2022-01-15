@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -35,6 +35,18 @@ print(inputElements)
 #inputElement.send_keys(Keys.RETURN)
 
 #driver.quit()
+@app.route('/about')
+def about_page():
+    return render_template('about_page.html')
+
+@app.route('/', methods=['POST'])
+def output_page():
+    city = request.form['city']
+    state = request.form['state']
+    miles = request.form['miles']
+    print(city)
+    return render_template('output.html', first_name='Mountain Creek', first_distance='50', first_score='10', second_name='Killington', second_distance='100', second_score='9.5', third_name='Whiteface', third_distance='120', third_score='8.0', fourth_name='Okemo', fourth_distance='200', fourth_score='7.5', fifth_name='Stowe', fifth_distance='350', fifth_score='5.5')
+
 
 
 
@@ -66,5 +78,5 @@ Mtns["Hunter Mountain"][2] = "".join(numeric_filter)
 
 
 
-
 #app.run(host='0.0.0.0', port=81)
+
