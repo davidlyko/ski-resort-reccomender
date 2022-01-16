@@ -14,6 +14,7 @@ import googlemaps
 app = Flask(__name__)
 #Format: { "Moutain X" : [url, lifts open / total lifts, trails open / total trail]}
 Mtns = {}
+api_key = "AIzaSyANc967AJ1r7m8REH-5nmlLvaPiork9T_A"
 
 @app.route('/')
 @app.route('/home')
@@ -63,18 +64,27 @@ def update_key(mountain, mountain_info):
         Mtns[mountain][1] = mountain_info[1].text
         Mtns[mountain][2] = mountain_info[2].text
 
-# @param location info 
-def update_mountain_names(address):
-    gmaps = googlemaps.Client(key='AIzaSyBW9c-mXKxyj3uxFUIrBL5VM3daUKciXVM')
+# @param zip_code = 5 digit int, max_distance = meters
+def update_mountain_names(zip_code, max_distance):
+    gmaps = googlemaps.Client(key=api_key)
+    
+    geocode = gmaps.geocode(10958)
+    lat = geocode[0]['geometry']['location']['lat']
+    lng = geocode[0]['geometry']['location']['lng']
 
-    url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=mongolian&inputtype=textquery&locationbias=circle%3A2000%4047.6918452%2C-122.2226413&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&key=YOUR_API_KEY"
+    print(lat) 
+    print(lng)
+    loc = (lat, lng)
 
-    payload={}
-    headers = {}
+    places = gmaps.places_nearby(location = loc, keyword = "ski mountains", radius = 1000000) 
+    print(type(places)) 
+    
+    print(len(places["results"]))
 
-response = requests.request("GET", url, headers=headers, data=payload)
+    for i in range(len(places["results"])):
+        print(places["results"][0]["name"])
 
-print(response.text)
+    #print(r.text)
                 
 
                 
@@ -94,7 +104,7 @@ def output_page():
 
 #running main program methods
 print("Starting program")
-update_mountain_names("10 Crabapple Drive, York Haven, PA, 17370")
+update_mountain_names(12345, 5)
 '''
 mountain_names = ["Mountain Creek", "Hunter Mountain"]
 i = 1
