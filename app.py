@@ -8,6 +8,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import pandas as pd
 import time
+import googlemaps
+
 
 app = Flask(__name__)
 #Format: { "Moutain X" : [url, lifts open / total lifts, trails open / total trail]}
@@ -60,6 +62,21 @@ def update_key(mountain, mountain_info):
     else: 
         Mtns[mountain][1] = mountain_info[1].text
         Mtns[mountain][2] = mountain_info[2].text
+
+# @param location info 
+def update_mountain_names(address):
+    gmaps = googlemaps.Client(key='AIzaSyBW9c-mXKxyj3uxFUIrBL5VM3daUKciXVM')
+
+    url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=mongolian&inputtype=textquery&locationbias=circle%3A2000%4047.6918452%2C-122.2226413&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&key=YOUR_API_KEY"
+
+    payload={}
+    headers = {}
+
+response = requests.request("GET", url, headers=headers, data=payload)
+
+print(response.text)
+                
+
                 
 #driver.quit()
 @app.route('/about')
@@ -74,8 +91,11 @@ def output_page():
     print(city)
     return render_template('output.html', first_name='Mountain Creek', first_distance='50', first_score='10', second_name='Killington', second_distance='100', second_score='9.5', third_name='Whiteface', third_distance='120', third_score='8.0', fourth_name='Okemo', fourth_distance='200', fourth_score='7.5', fifth_name='Stowe', fifth_distance='350', fifth_score='5.5')
 
+
+#running main program methods
 print("Starting program")
-time.sleep(5)
+update_mountain_names("10 Crabapple Drive, York Haven, PA, 17370")
+'''
 mountain_names = ["Mountain Creek", "Hunter Mountain"]
 i = 1
 for name in mountain_names: 
@@ -87,5 +107,6 @@ update_mtns(Mtns)
 print(Mtns)
 
 
-#app.run(host='0.0.0.0', port=81)
+app.run(host='0.0.0.0', port=81)
+'''
 
