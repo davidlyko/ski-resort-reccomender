@@ -1,3 +1,4 @@
+from asyncio import sleep
 from cgitb import text
 from flask import Flask, render_template, request
 import requests
@@ -14,7 +15,7 @@ import googlemaps
 app = Flask(__name__)
 #Format: { "Moutain X" : [url, lifts open / total lifts, trails open / total trail]}
 Mtns = {}
-api_key = "AIzaSyANc967AJ1r7m8REH-5nmlLvaPiork9T_A"
+api_key = ""
 
 @app.route('/')
 @app.route('/home')
@@ -64,25 +65,23 @@ def update_key(mountain, mountain_info):
         Mtns[mountain][1] = mountain_info[1].text
         Mtns[mountain][2] = mountain_info[2].text
 
-# @param zip_code = 5 digit int, max_distance = meters
+# @param zip_code = 5 digit int, max_distance = meters @return a list of nearby mountains by name
 def update_mountain_names(zip_code, max_distance):
     gmaps = googlemaps.Client(key=api_key)
     
     geocode = gmaps.geocode(10958)
     lat = geocode[0]['geometry']['location']['lat']
     lng = geocode[0]['geometry']['location']['lng']
-
-    print(lat) 
-    print(lng)
     loc = (lat, lng)
 
-    places = gmaps.places_nearby(location = loc, keyword = "ski mountains", radius = 1000000) 
-    print(type(places)) 
-    
-    print(len(places["results"]))
-
+    places = gmaps.places_nearby(location = loc, keyword = "ski mountains", radius = max_distance) 
+    names = []
     for i in range(len(places["results"])):
-        print(places["results"][0]["name"])
+        names.append(places["results"][i]["name"])
+
+    print(names)
+    return names
+
 
     #print(r.text)
                 
@@ -104,19 +103,19 @@ def output_page():
 
 #running main program methods
 print("Starting program")
-update_mountain_names(12345, 5)
-'''
-mountain_names = ["Mountain Creek", "Hunter Mountain"]
-i = 1
+
+mountain_names = update_mountain_names(10958, 50000)
+print(mountain_names)
+
+time.sleep(5)
+
 for name in mountain_names: 
     add_mtn(name)
-    print("Added " + str(i) + " mountain (" + name + ")")
-    i = i + 1
 
 update_mtns(Mtns)
 print(Mtns)
 
 
-app.run(host='0.0.0.0', port=81)
-'''
+#app.run(host='0.0.0.0', port=81)
+
 
