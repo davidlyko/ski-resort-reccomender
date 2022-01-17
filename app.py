@@ -48,10 +48,9 @@ def update_mtns():
         #search bar that actually takes input
         header = driver.find_element(By.CLASS_NAME, "styles_search__35w0k")
         search_bar = header.find_element(By.TAG_NAME, "input")
-        search_bar.clear()
         search_bar.send_keys(mountain.replace("Resort", ""))
         search_bar.send_keys(Keys.RETURN)
-        time.sleep(1)
+        time.sleep(2)
         try:
             #first link after search
             header = driver.find_element(By.CLASS_NAME, "styles_link__Ibp28")  
@@ -82,7 +81,7 @@ def update_key(mountain, mountain_info):
         Mtns[mountain][1] = mountain_info[1].text
         Mtns[mountain][2] = mountain_info[2].text
 
-# @param zip_code = 5 digit int, max_distance = meters @return a list of nearby mountains by name
+# @param zip_code = 5 digit int, max_distance = miles @return a list of nearby mountains by name
 def update_mountain_names(zip_code, max_distance):
     gmaps = googlemaps.Client(key=api_key)
     geocode = gmaps.geocode(zip_code)
@@ -99,7 +98,7 @@ def update_mountain_names(zip_code, max_distance):
                 
 
                 
-#driver.quit()
+
 @app.route('/about')
 def about_page():
     return render_template('about_page.html')
@@ -132,13 +131,10 @@ def output_page():
 
 
 #running main program methods
-'''
+
 def main(): 
     print("Starting program")
-
-    
-
-    mountain_names = update_mountain_names(12442, 30000)
+    mountain_names = update_mountain_names(12442, 50)
     print(mountain_names)
     for name in mountain_names: 
         add_mtn(name)
@@ -146,10 +142,10 @@ def main():
     print(Mtns)
 
 main()
-'''
 
+'''
 if __name__ == "__main__":
     app.run()
 #app.run(host='0.0.0.0', port=81)
-
+'''
 
