@@ -26,6 +26,7 @@ def create_webdriver():
     DRIVER_PATH = "C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
     ser = Service(DRIVER_PATH)
     op = webdriver.ChromeOptions()
+    op.add_argument('headless') #hide window from popping up
     driver = webdriver.Chrome(service=ser, options=op)
     return driver
 
@@ -34,29 +35,43 @@ def add_mtn(name):
     Mtns[name] = ["url", 0, 0]
 
 # @param dictionary
-def update_mtns(mtns): 
-    for mountain in mtns: 
-        driver = create_webdriver()
+def update_mtns(): 
+    print("Gathering mountain info ...")
+    driver = create_webdriver()
+    for mountain in list(Mtns): 
         driver.get("https://www.onthesnow.com/")
-        time.sleep(3)
+        #main search bar that takes you to second search bar
         search_btn = driver.find_element(By.CLASS_NAME, "styles_btnSearch__1DkDs")
         search_btn.click()
+        #search bar that actually takes input
         header = driver.find_element(By.CLASS_NAME, "styles_search__35w0k")
         search_bar = header.find_element(By.TAG_NAME, "input")
         search_bar.clear()
-        search_bar.send_keys(mountain)
+        search_bar.send_keys(mountain.replace("Resort", ""))
         search_bar.send_keys(Keys.RETURN)
-        time.sleep(6)
-        header = driver.find_element(By.CLASS_NAME, "styles_link__Ibp28")
-        URL = header.get_attribute("href") #first search result link
-        Mtns[mountain][0] = URL 
-        driver.get(URL) 
-        time.sleep(3)
-        mountain_info = driver.find_elements(By.CLASS_NAME, "styles_value__ocDGV")
-        update_key(mountain, mountain_info)
-        driver.quit()
+        time.sleep(1)
+        try:
+            #first link after search
+            header = driver.find_element(By.CLASS_NAME, "styles_link__Ibp28")  
+        except: 
+            #nothing came up in search
+            Mtns.pop(mountain)
+        else:     
+            URL = header.get_attribute("href") #first search result link
+            Mtns[mountain][0] = URL 
+            driver.get(URL) 
+            time.sleep(2)
+            mountain_info = driver.find_elements(By.CLASS_NAME, "styles_value__ocDGV")
+            update_key(mountain, mountain_info)
+
+    driver.quit()
+
+        
+        
 
 def update_key(mountain, mountain_info): 
+    if( len(mountain_info) == 0): 
+        return
     #if mtn has extra info
     if(len(mountain_info) > 3): 
         Mtns[mountain][1] = mountain_info[2].text
@@ -69,21 +84,17 @@ def update_key(mountain, mountain_info):
 def update_mountain_names(zip_code, max_distance):
     gmaps = googlemaps.Client(key=api_key)
     
-    geocode = gmaps.geocode(10958)
+    geocode = gmaps.geocode(zip_code)
     lat = geocode[0]['geometry']['location']['lat']
     lng = geocode[0]['geometry']['location']['lng']
     loc = (lat, lng)
 
-    places = gmaps.places_nearby(location = loc, keyword = "ski mountains", radius = max_distance) 
+    places = gmaps.places_nearby(location = loc, keyword = "ski resort", radius = max_distance) 
     names = []
     for i in range(len(places["results"])):
         names.append(places["results"][i]["name"])
 
-    print(names)
     return names
-
-
-    #print(r.text)
                 
 
                 
@@ -102,19 +113,17 @@ def output_page():
 
 
 #running main program methods
-print("Starting program")
+def main(): 
+    print("Starting program")
 
-mountain_names = update_mountain_names(10958, 50000)
-print(mountain_names)
+    mountain_names = update_mountain_names(12442, 30000)
+    print(mountain_names)
+    for name in mountain_names: 
+        add_mtn(name)
+    update_mtns()
+    print(Mtns)
 
-time.sleep(5)
-
-for name in mountain_names: 
-    add_mtn(name)
-
-update_mtns(Mtns)
-print(Mtns)
-
+main()
 
 #app.run(host='0.0.0.0', port=81)
 
