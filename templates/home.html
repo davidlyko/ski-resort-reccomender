@@ -46,13 +46,7 @@
             vertical-align: middle;
         }
 
-        input#city {
-            width: calc(100% - 40px);
-            padding: 10px;
-            border: none;
-        }
-
-        input#state {
+        input#zip {
             width: calc(100% - 40px);
             padding: 10px;
             border: none;
@@ -109,14 +103,8 @@
 <form name="getLocation" action="." method="post">
     <div id="input-group">
         <label for="location" class="glyphicon glyphicon-search"></label><!--
-        --><input type="text" placeholder="Input Your City" id="city" name="city">
-    
+        --><input type="number" placeholder="Input Your Zip Code" id="zip" name="zip">
         <br/>
-
-        <label for="location" class="glyphicon glyphicon-search"></label><!--
-        --><input type="text" placeholder="Input Your State" id="state" name="state">
-        <br/>
-
         <label for="location" class="glyphicon glyphicon-search"></label><!--
         --><input type="number" placeholder="Input Maximum Distance You Would Like to Travel (miles)" id="miles" name="miles">
         </div>
@@ -126,11 +114,9 @@
 
     <script>
         function insertLocation(){
-            var city = document.getElementById("city").value;
-            var state = document.getElementById("state").value;
+            var zip = document.getElementById("zip").value;
             var miles = document.getElementById("miles").value;
-            console.log(city);
-            console.log(state);
+            console.log(zip);
             console.log(miles);
         }
     </script>

@@ -15,7 +15,7 @@ import googlemaps
 app = Flask(__name__)
 #Format: { "Moutain X" : [url, lifts open / total lifts, trails open / total trail]}
 Mtns = {}
-api_key = ""
+api_key = "AIzaSyCvECllOIOI0BNfujzYemh4HoZz8ufe2Lw"
 
 @app.route('/')
 @app.route('/home')
@@ -105,10 +105,9 @@ def about_page():
 
 @app.route('/', methods=['POST'])
 def output_page():
-    city = request.form['city']
-    state = request.form['state']
+    zipCode = request.form['zip']
     miles = request.form['miles']
-    print(city)
+    print(zip)
     return render_template('output.html', first_name='Mountain Creek', first_distance='50', first_score='10', second_name='Killington', second_distance='100', second_score='9.5', third_name='Whiteface', third_distance='120', third_score='8.0', fourth_name='Okemo', fourth_distance='200', fourth_score='7.5', fifth_name='Stowe', fifth_distance='350', fifth_score='5.5')
 
 
